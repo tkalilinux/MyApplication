@@ -1,0 +1,283 @@
+import React, { useState } from "react";
+import "./LoginComponent.css";
+
+// 🔸 Component input có label nổi khi focus
+const InputFloating = ({ type, label, value, onChange }) => (
+    <div className="form-floating-custom">
+        <input type={type} required value={value} onChange={onChange} />
+        <label>{label}</label>
+    </div>
+);
+
+
+// 🔸 Form Đăng Nhập
+// -------------- LOGIN FORM --------------
+const LoginForm = ({ switchTo }) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = (e) => {
+        e.preventDefault(); // Ngăn reload
+        console.log("🔐 Logging in with:", { email, password });
+        // ✅ Gọi API đăng nhập ở đây
+    };
+
+    return (
+        <div>
+            <h3 className="mb-4 text-center">🔐 Login</h3>
+            <form onSubmit={handleLogin}>
+                <InputFloating type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <InputFloating type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+                <button className="btn btn-primary w-100 mt-3 mb-2">Login</button>
+
+                <div className="text-center mt-2">
+                    <button type="button" className="btn btn-link" onClick={() => switchTo("register")}>Register</button>
+                    |
+                    <button type="button" className="btn btn-link" onClick={() => switchTo("forgot")}>Forgot?</button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+
+
+// 🔸 Form Đăng Ký
+// -------------- REGISTER FORM --------------
+const RegisterForm = ({ switchTo }) => {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        console.log("🆕 Registering with:", { username, email, password });
+        // ✅ Gọi API đăng ký ở đây
+    };
+
+    return (
+        <div>
+            <h3 className="mb-4 text-center">🆕 Register</h3>
+            <form onSubmit={handleRegister}>
+                <InputFloating type="text" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <InputFloating type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <InputFloating type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+                <button className="btn btn-success w-100 mt-3 mb-2">Register</button>
+                <div className="text-center">
+                    <button type="button" className="btn btn-link" onClick={() => switchTo("login")}>Back to Login</button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+
+// 🔸 Form Quên Mật Khẩu
+// -------------- FORGOT PASSWORD FORM --------------
+const ForgotPasswordForm = ({ switchTo }) => {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [verified, setVerified] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    const [error, setError] = useState("");
+
+    const handleVerify = (e) => {
+        e.preventDefault();
+
+        // 🔸 Giả lập gọi API xác thực username + email
+        console.log("🔍 Verifying:", { username, email });
+
+        // ✅ Giả lập response:
+        const isValid = username === "demo" && email === "demo@example.com" ? 0 : 1;
+
+        if (isValid === 0) {
+            setVerified(true);      // Cho phép nhập password mới
+            setError("");           // Clear lỗi
+        } else {
+            setError("❌ Username or email is incorrect."); // Hiển thị lỗi
+        }
+    };
+
+    const handleResetPassword = (e) => {
+        e.preventDefault();
+        console.log("🔁 Resetting password for", username, "to:", newPassword);
+
+        // ✅ Gọi API reset password ở đây (giả lập)
+        alert("✅ Password updated successfully!");
+        switchTo("login"); // Quay lại login
+    };
+
+    return (
+        <div>
+            <h3 className="mb-4 text-center">🔁 Forgot Password</h3>
+
+            <form onSubmit={verified ? handleResetPassword : handleVerify}>
+                <InputFloating
+                    type="text"
+                    label="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <InputFloating
+                    type="email"
+                    label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+
+                {verified && (
+                    <InputFloating
+                        type="password"
+                        label="New Password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                )}
+
+                <button
+                    className={`btn ${verified ? "btn-success" : "btn-warning"} w-100 mt-3 mb-2`}
+                    type="submit"
+                >
+                    {verified ? "Update Password" : "Verify Account"}
+                </button>
+
+                {error && <div className="text-danger text-center">{error}</div>}
+
+                <div className="text-center mt-2">
+                    <button
+                        type="button"
+                        className="btn btn-link"
+                        onClick={() => switchTo("login")}
+                    >
+                        Back to Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+
+
+// 🔸 Component chính quản lý giao diện đăng nhập
+// -------------- MAIN COMPONENT --------------
+const LoginComponent = () => {
+
+    //Mặc định dùng component LoginForm
+    const [activeForm, setActiveForm] = useState("login");
+
+    return (
+        <div className="login-wrapper">
+            <div className="login-box">
+                {activeForm === "login" && <LoginForm switchTo={setActiveForm} />}
+                {activeForm === "register" && <RegisterForm switchTo={setActiveForm} />}
+                {activeForm === "forgot" && <ForgotPasswordForm switchTo={setActiveForm} />}
+            </div>
+        </div>
+    );
+};
+
+export default LoginComponent;
+
+
+/* Layout bao quanh */
+.login-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d0e8ff, #ffffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Hộp chứa form */
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Label nổi */
+.form-floating-custom {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.form-floating-custom input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-floating-custom input:focus {
+    border-color: #0d6efd;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
+}
+
+/* Label nổi di chuyển */
+.form-floating-custom label {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    background: #fff;
+    padding: 0 6px;
+    color: #999;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+/* Khi input focus hoặc có giá trị */
+.form-floating-custom input:focus+label,
+.form-floating-custom input:not(:placeholder-shown)+label,
+.form-floating-custom input:valid+label {
+    top: -10px;
+    left: 12px;
+    font-size: 12px;
+    color: #0d6efd;
+}
+
+/* Nút submit */
+button.btn {
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+/* Link chuyển form */
+.btn-link {
+    font-size: 14px;
+    padding: 0;
+    color: #0d6efd;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Lỗi */
+.text-danger {
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+
+css lại cho thời trang hơn
