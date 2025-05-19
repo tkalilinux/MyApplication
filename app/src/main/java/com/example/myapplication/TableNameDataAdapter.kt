@@ -11,7 +11,7 @@ import android.widget.TextView
 
 class TableNameDataAdapter(var context: Context, var data:ArrayList<LocalSQLite.TableNameData>): BaseAdapter() {
 
-    /**Thay đổi data**/
+    /**Thay đổi data xem cos dduoc khong**/
     fun submitList(newData: ArrayList<LocalSQLite.TableNameData>) {
         data = newData
         notifyDataSetChanged()
