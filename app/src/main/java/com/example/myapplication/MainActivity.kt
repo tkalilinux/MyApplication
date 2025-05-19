@@ -7,7 +7,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    //    Test update xem cos dduoc khong 5
+    //    Test update xem cos dduoc khong 999
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
