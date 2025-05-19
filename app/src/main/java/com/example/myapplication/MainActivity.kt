@@ -7,7 +7,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    //    Test update 23456
+    //    Test update 23456pham quoc thuong
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.test).setOnClickListener {
             startActivity(Intent(this, Example::class.java))
         }
+
 
 
 //        val test = findViewById<AnimatedCanvasView>(R.id.test)
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 //
 //            a= !a
 //        }
+
+
 
     }
 }
